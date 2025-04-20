@@ -1,0 +1,57 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Caches
+.cache/
+*.log
+
+# Virtual environments
+venv/
+env/
+.venv/
+.env/
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Selenium downloads
+*.crdownload
+*.part
+*.tmp
+
+# WebDriver binaries (если ты сохраняешь их в проект)
+chromedriver
+chromedriver.exe
+geckodriver
+geckodriver.exe
+msedgedriver
+msedgedriver.exe
+
+# dotenv files
+.env
+.env.*
+
+# Jupyter notebook checkpoints (если вдруг используешь)
+.ipynb_checkpoints/
+
+# Test output
+htmlcov/
+coverage.xml
+nosetests.xml
+test-output/
+.junit.xml
+
+# Pytest cache
+.pytest_cache/
+
+# MyPy & Pylint
+.mypy_cache/
+pylint-report.txt
+pylint.log
