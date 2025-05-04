@@ -1,3 +1,3 @@
-from .loader import get_links, parse_week_schedule
+from .loader import ScheduleLoader
 
-__all__ = ["get_links", "parse_week_schedule"]
+__all__ = ["ScheduleLoader"]
