@@ -36,9 +36,8 @@ class ScheduleLoader:
         hrefs = [unquote(btn.get_attribute("href")) for btn in buttons if btn.get_attribute("href")]
         return hrefs
 
-
     def _get_cache_filename(self, url: str) -> str:
-        hashed = hashlib.md5(url.encode("utf-8")).hexdigest()
+        hashed = hashlib.md5(unquote(url).encode("utf-8")).hexdigest()
         return os.path.join("cache", f"{hashed}.json")
 
     def _load_from_cache(self, url: str) -> list[dict] | None:
@@ -63,7 +62,6 @@ class ScheduleLoader:
         if data:
             self._save_to_cache(url, data)
         return data
-
 
     def _parse_week_schedule(self, url: str) -> list[dict]:
         try:
