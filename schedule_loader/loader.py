@@ -8,7 +8,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 mai_url = "https://mai.ru/education/studies/schedule/"
 
-def get_links() -> list:
+def get_links() -> list[str]:
     
     url = "https://clck.ru/3LYESN"
     
@@ -33,13 +33,13 @@ def get_links() -> list:
     return hrefs
 
 
-def parse_week_schedule(url: str) -> list:
+def parse_week_schedule(url: str) -> list[dict]:
     options = Options()
     options.add_argument("--headless")
     driver = webdriver.Firefox(options=options)
 
     try:
-        driver.get(mai_url)
+        driver.get(mai_url) #делаем куки
         driver.get(url)
 
         WebDriverWait(driver, 10).until(
