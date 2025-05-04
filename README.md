@@ -23,7 +23,7 @@
 - **База данных**: PostgreSQL
 - **Интеграция с Google**: Google Calendar API, Google Sheets API
 - **CLI**: `argparse`
-- **Кэширование**: Локальное сохранение HTML-страниц
+- **Кэширование**: Локальное сохранение в виде Json
 
 ---
 
