@@ -68,17 +68,30 @@ def parse_week_schedule(url: str) -> list:
                             lesson_type = "Неизвестно"
 
                         info_items = block.find_elements(By.CSS_SELECTOR, "ul > li")
-
-                        time = info_items[0].text.strip() if len(info_items) > 0 else "Неизвестно"
-                        teacher = info_items[1].text.strip() if len(info_items) > 1 else "Неизвестно"
-                        location = info_items[2].text.strip() if len(info_items) > 2 else "Неизвестно"
+                        text_info = [elem.text.strip() for elem in info_items]
+                        if len(text_info) > 2:
+                            time = text_info[0]
+                            teachers = text_info[1:-1]
+                            location = text_info[-1]
+                        elif len(text_info) == 2:
+                            time = text_info[0]
+                            teachers = ["Неизвестно"]
+                            location = text_info[1]
+                        elif len(text_info) == 1:
+                            time = text_info[0]
+                            teachers = ["Неизвестно"]
+                            location = "Неизвестно"
+                        else:
+                            time = "Неизвестно"
+                            teachers = ["Неизвестно"]
+                            location = "Неизвестно"
                         
                         all_lessons.append({
                             "day": day_title,
                             "subject": subject,
                             "lesson_type": lesson_type,
                             "time": time,
-                            "teacher": teacher,
+                            "teachers": teachers,
                             "location": location
                         })
 
