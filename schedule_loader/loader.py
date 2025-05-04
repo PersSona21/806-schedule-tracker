@@ -1,5 +1,7 @@
 import re
 import json
+import os
+import hashlib
 from selenium import webdriver
 from urllib.parse import unquote
 from selenium.webdriver.firefox.options import Options
@@ -13,6 +15,7 @@ mai_url = "https://mai.ru/education/studies/schedule/"
 class ScheduleLoader:
     
     def __init__(self):
+        os.makedirs("cache", exist_ok=True)
         self.options = Options()
         self.options.add_argument("--headless")
         self.driver = webdriver.Firefox(options=self.options)
@@ -34,7 +37,35 @@ class ScheduleLoader:
         return hrefs
 
 
-    def parse_week_schedule(self, url: str) -> list[dict]:
+    def _get_cache_filename(self, url: str) -> str:
+        hashed = hashlib.md5(url.encode("utf-8")).hexdigest()
+        return os.path.join("cache", f"{hashed}.json")
+
+    def _load_from_cache(self, url: str) -> list[dict] | None:
+        path = self._get_cache_filename(url)
+        if os.path.exists(path):
+            with open(path, "r", encoding="utf-8") as f:
+                return json.load(f)
+        return None
+
+    def _save_to_cache(self, url: str, data: list[dict]):
+        path = self._get_cache_filename(url)
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+
+    def get_cached_or_parse(self, url: str) -> list[dict]:
+        cached = self._load_from_cache(url)
+        
+        if cached:
+            return cached
+
+        data = self._parse_week_schedule(url)
+        if data:
+            self._save_to_cache(url, data)
+        return data
+
+
+    def _parse_week_schedule(self, url: str) -> list[dict]:
         try:
             self.driver.get(mai_url) #делаем куки
             self.driver.get(url)
@@ -102,9 +133,9 @@ class ScheduleLoader:
         except Exception as e:
             print(f"Ошибка: {e}")
 
-    def name(self, url: str) -> json:
+    def format_json(self, url: str) -> json:
         with open("output.json", "w", encoding="UTF-8") as file_out:
-            json.dump(self.parse_week_schedule(url=url), file_out, ensure_ascii=False, indent=2) # type: ignore
+            json.dump(self._parse_week_schedule(url=url), file_out, ensure_ascii=False, indent=2) # type: ignore
     
     def close(self):
         self.driver.quit()
