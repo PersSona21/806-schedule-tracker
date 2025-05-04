@@ -55,7 +55,3 @@ test-output/
 .mypy_cache/
 pylint-report.txt
 pylint.log
-
-
-# test files
-main.py
