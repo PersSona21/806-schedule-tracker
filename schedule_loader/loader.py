@@ -1,4 +1,5 @@
 import re
+import json
 from selenium import webdriver
 from urllib.parse import unquote
 from selenium.webdriver.firefox.options import Options
@@ -101,5 +102,9 @@ class ScheduleLoader:
         except Exception as e:
             print(f"Ошибка: {e}")
 
+    def name(self, url: str) -> json:
+        with open("output.json", "w", encoding="UTF-8") as file_out:
+            json.dump(self.parse_week_schedule(url=url), file_out, ensure_ascii=False, indent=2) # type: ignore
+    
     def close(self):
         self.driver.quit()

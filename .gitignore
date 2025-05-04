@@ -57,5 +57,8 @@ pylint-report.txt
 pylint.log
 
 
+#db files
+*.json
+
 # test files
 main.py
