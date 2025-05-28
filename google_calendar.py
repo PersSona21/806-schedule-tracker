@@ -5,8 +5,8 @@ from datetime import datetime, timedelta
 
 # Конфигурация
 SCOPES = ["https://www.googleapis.com/auth/calendar"]
-SERVICE_ACCOUNT_FILE = "credentials.json"  # Путь к JSON-ключу
-CALENDAR_ID = "your_calendar_id@group.calendar.google.com"  # ID календаря
+SERVICE_ACCOUNT_FILE = r"C:\Users\Кирилл\Desktop\учеб\Python_project\calendar\credentials.json"  # Путь к JSON-ключу
+CALENDAR_ID = "649729f42af022a458dbf43bfa0cf12eea5e98a45c4bd10833e8e6134d42f3ec@group.calendar.google.com"  # ID календаря
 
 # Загрузка учетных данных
 credentials = service_account.Credentials.from_service_account_file(
@@ -19,22 +19,9 @@ service = build("calendar", "v3", credentials=credentials)
 
 from database import Session, Schedule
 
-def sync_db_to_calendar():
-    session = Session()
-    unsynced_events = session.query(Schedule).filter_by(is_synced=False).all()
 
-    for event in unsynced_events:
-        create_event(
-            audience=event.audience,
-            subject=event.subject,
-            teacher=event.teacher,
-            start_time=event.start_time,
-            end_time=event.end_time,
-            date="2024-05-21",  # Замените на актуальную дату
-            recurrence=event.recurrence
-        )
-        event.is_synced = True
-        session.commit()
+
+
 
 
 def create_event(audience: str, subject: str, teacher: str, start_time: str, end_time: str, date: str, recurrence: str = None):
@@ -76,6 +63,26 @@ def create_event(audience: str, subject: str, teacher: str, start_time: str, end
     except Exception as e:
         print(f"Ошибка: {e}")
 
+
+def sync_db_to_calendar():
+    session = Session()
+    unsynced_events = session.query(Schedule).filter_by(is_synced=False).all()
+
+    for event in unsynced_events:
+        create_event(
+            audience=event.audience,
+            subject=event.subject,
+            teacher=event.teacher,
+            start_time=event.start_time,
+            end_time=event.end_time,
+            date=event.day,
+            recurrence=event.recurrence
+        )
+        event.is_synced = True
+        session.commit()
+
+
+sync_db_to_calendar()
 
 def get_events(date: str):
     """
