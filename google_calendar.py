@@ -2,6 +2,7 @@ from google.oauth2 import service_account
 from googleapiclient.discovery import build
 import os
 from datetime import datetime, timedelta
+from database import Session, Schedule
 
 # Конфигурация
 SCOPES = ["https://www.googleapis.com/auth/calendar"]
@@ -15,26 +16,6 @@ credentials = service_account.Credentials.from_service_account_file(
 
 # Создание клиента Google Calendar API
 service = build("calendar", "v3", credentials=credentials)
-
-
-from database import Session, Schedule
-
-def sync_db_to_calendar():
-    session = Session()
-    unsynced_events = session.query(Schedule).filter_by(is_synced=False).all()
-
-    for event in unsynced_events:
-        create_event(
-            audience=event.audience,
-            subject=event.subject,
-            teacher=event.teacher,
-            start_time=event.start_time,
-            end_time=event.end_time,
-            date="2024-05-21",  # Замените на актуальную дату
-            recurrence=event.recurrence
-        )
-        event.is_synced = True
-        session.commit()
 
 
 def create_event(audience: str, subject: str, teacher: str, start_time: str, end_time: str, date: str, recurrence: str = None):
@@ -76,6 +57,26 @@ def create_event(audience: str, subject: str, teacher: str, start_time: str, end
     except Exception as e:
         print(f"Ошибка: {e}")
 
+
+def sync_db_to_calendar():
+    session = Session()
+    unsynced_events = session.query(Schedule).filter_by(is_synced=False).all()
+
+    for event in unsynced_events:
+        create_event(
+            audience=event.audience,
+            subject=event.subject,
+            teacher=event.teacher,
+            start_time=event.start_time,
+            end_time=event.end_time,
+            date=event.day,
+            recurrence=event.recurrence
+        )
+        event.is_synced = True
+        session.commit()
+
+
+sync_db_to_calendar()
 
 def get_events(date: str):
     """
