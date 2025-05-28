@@ -61,3 +61,4 @@ pylint.log
 *.json
 
 # test files
+testpy.py
