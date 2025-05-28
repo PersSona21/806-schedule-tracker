@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 # Конфигурация
 SCOPES = ["https://www.googleapis.com/auth/calendar"]
 SERVICE_ACCOUNT_FILE = "credentials.json"  # Путь к JSON-ключу
-CALENDAR_ID = "649729f42af022a458dbf43bfa0cf12eea5e98a45c4bd10833e8e6134d42f3ec@group.calendar.google.com"  # ID календаря
+CALENDAR_ID = "your_calendar_id@group.calendar.google.com"  # ID календаря
 
 # Загрузка учетных данных
 credentials = service_account.Credentials.from_service_account_file(
