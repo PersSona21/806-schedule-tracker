@@ -11,6 +11,9 @@ from selenium.webdriver.support import expected_conditions as EC
 
 mai_url = "https://mai.ru/education/studies/schedule/"
 
+# Словарь для замены аудиторий (ГУК Б-422 -> IT1, ..., ГУК Б-440 -> IT19)
+AUDITORIUM_MAPPING = {f"ГУК Б-{422 + i}": f"IT{i + 1}" for i in range(19)}
+
 class ScheduleLoader:
     
     def __init__(self):
@@ -100,6 +103,8 @@ class ScheduleLoader:
                                 teachers = ["Неизвестно"]
                                 location = "Неизвестно"
 
+                            location = AUDITORIUM_MAPPING.get(location, location)
+                            
                             # Разделяем время на start_time и end_time
                             try:
                                 if time and " – " in time:

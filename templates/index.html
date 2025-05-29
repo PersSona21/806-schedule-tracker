@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Статус аудиторий IT</title>
+    <style>
+        body {
+            background-color: white;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            margin: 20px;
+            color: #333;
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .auditorium {
+            display: flex;
+            align-items: center;
+            margin: 12px 0;
+            font-size: 16px;
+        }
+        .circle {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+        .auditorium-name {
+            font-weight: 600;
+            width: 80px;
+            margin-right: 12px;
+        }
+        .status-text {
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <h1>📅 Статус аудиторий IT</h1>
+    {% if statuses %}
+        {% for status in statuses %}
+            <div class="auditorium">
+                <div class="circle" style="background-color: {{ status.color }};"></div>
+                <span class="auditorium-name">{{ status.auditorium }}</span>
+                <span class="status-text">{{ status.status_text }}</span>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>Нет данных об аудиториях.</p>
+    {% endif %}
+</body>
+</html>
