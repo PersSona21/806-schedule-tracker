@@ -7,7 +7,7 @@ import datetime
 
 SCOPES = ["https://www.googleapis.com/auth/calendar"]
 SERVICE_ACCOUNT_FILE = "credentials.json"
-CALENDAR_ID = "a5495bb8bd838fc024592b2b3f6fa7fe79f75357e7fa1fc05cd53da79bbbba34@group.calendar.google.com"
+CALENDAR_ID = "eee4bfd713a748c37944a121c2dc881af521dc32d2316bde65d4e759e48cf727@group.calendar.google.com"
 
 credentials = service_account.Credentials.from_service_account_file(
     SERVICE_ACCOUNT_FILE, scopes=SCOPES

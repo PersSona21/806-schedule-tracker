@@ -30,8 +30,8 @@ def build_url(group: str, week: str = None) -> str:
 
 def date_parse(date: str, year: int = 2025) -> str:
     month_map = {
-        "янв": "01", "фев": "02", "мар": "03", "апр": "04", "мая": "05", "июн": "06",
-        "июл": "07", "авг": "08", "сен": "09", "окт": "10", "ноя": "11", "дек": "12"
+        "января": "01", "февраля": "02", "марта": "03", "апреля": "04", "мая": "05", "июня": "06",
+        "июля": "07", "августа": "08", "сентября": "09", "октября": "10", "ноября": "11", "декабря": "12"
     }
     try:
         if not date or date.strip() == "":
@@ -63,7 +63,6 @@ def main():
         if not data:
             print(f"{Fore.YELLOW}Нет данных для URL {url}{Style.RESET_ALL}")
             return
-
         # Сохранение в базу данных
         for item in data:
             item['day'] = date_parse(item.get('day', ''))
@@ -73,7 +72,7 @@ def main():
 
         # Синхронизация с Google Calendar
         sync_db_to_calendar()
-
+        # print(data)
         # Фильтрация данных
         filtered = data
         if args.date:
