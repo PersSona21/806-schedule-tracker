@@ -63,3 +63,4 @@ pylint.log
 # test files
 testpy.py
 test_google_calendar.py
+check_database.py

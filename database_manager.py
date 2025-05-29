@@ -20,10 +20,3 @@ class Database_manager:
     
     def close(self):
         self.db.close()
-    
-
-
-
-
-
-

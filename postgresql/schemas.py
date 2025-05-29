@@ -20,4 +20,4 @@ class Lesson(LessonBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True  # Заменяем orm_mode
