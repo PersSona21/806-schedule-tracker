@@ -1,21 +1,27 @@
 from schedule_loader import ScheduleLoader
 import argparse
+from tabulate import tabulate
+from colorama import init, Fore, Style
 
-text = """Пример:\n
-python cli.py --group М8О-111БВ-24 --week 13 --subject "Экономическая теория" --date 07.05.2025 --type ЛК'"""
+# Инициализация colorama для цветного вывода
+init(autoreset=True)
+
+text = """Пример:
+python cli.py --group М8О-111БВ-24 --week 13 --subject "Экономическая теория" --date 07.05.2025 --type ЛК --print"""
 
 def parse_args():
     parser = argparse.ArgumentParser(description=text)
     
     parser.add_argument("--url", type=str, help="URL для загрузки расписания", required=False)
-    parser.add_argument("--group", type=str, help="Группа к примеру М8О-111БВ-24", required=False)
+    parser.add_argument("--group", type=str, help="Группа, например М8О-111БВ-24", required=False)
     parser.add_argument("--week", type=str, help="Неделя", required=False)
-    parser.add_argument("--subject", "-s", type=str, help='Предмет к примеру "Экономическая теория"', required=False)
+    parser.add_argument("--subject", "-s", type=str, help='Предмет, например "Экономическая теория"', required=False)
     parser.add_argument("--date", type=str, help='Дата формата дд.мм.гггг', required=False)
     parser.add_argument("--type", type=str, help='Тип занятия ПЗ|ЛК|ЛР', required=False)
+    parser.add_argument("--print", action="store_true", help="Выводить данные в консоль в виде таблицы")
     return parser.parse_args()
 
-def build_url(group: str, week :str =None) -> str:
+def build_url(group: str, week: str = None) -> str:
     if week:
         base_url = "https://mai.ru/education/studies/schedule/index.php?group={group}&week={week}".format(group=group, week=week)
     else:
@@ -24,18 +30,19 @@ def build_url(group: str, week :str =None) -> str:
 
 def date_parse(date: str, year: int = 2025) -> str:
     month_map = {
-    "янв": "01",
-    "фев": "02",
-    "мар": "03",
-    "апр": "04",
-    "мая": "05",
-    "июн": "06",
-    "июл": "07",
-    "авг": "08",
-    "сен": "09",
-    "окт": "10",
-    "ноя": "11",
-    "дек": "12"}
+        "янв": "01",
+        "фев": "02",
+        "мар": "03",
+        "апр": "04",
+        "мая": "05",
+        "июн": "06",
+        "июл": "07",
+        "авг": "08",
+        "сен": "09",
+        "окт": "10",
+        "ноя": "11",
+        "дек": "12"
+    }
 
     day_month = date.split(", ")[1]
     day, month_rus = day_month.split()
@@ -54,7 +61,7 @@ def main():
         else:
             url = build_url(args.group)
     else:
-        print("Ошибка: Нужно передать либо URL, либо группу")
+        print(f"{Fore.RED}Ошибка: Нужно передать либо URL, либо группу{Style.RESET_ALL}")
         return
     
     data = loader.get_cached_or_parse(url=url.rstrip('#'))
@@ -66,9 +73,34 @@ def main():
         filtered = [elem for elem in filtered if elem.get('subject').lower() == args.subject.lower()]
     if args.type:
         filtered = [elem for elem in filtered if elem.get('lesson_type').lower() == args.type.lower()]
-    for elem in filtered:
-        print(elem)
-
+    
+    if args.print:
+        if filtered:
+            # Подготовка данных для таблицы
+            table_data = [
+                [
+                    elem['day'],
+                    elem['subject'],
+                    elem['lesson_type'],
+                    f"{elem['start_time']} - {elem['end_time']}",
+                    ", ".join(elem['teachers']),
+                    elem['location']
+                ]
+                for elem in filtered
+            ]
+            headers = [
+                Fore.CYAN + "День" + Style.RESET_ALL,
+                Fore.CYAN + "Предмет" + Style.RESET_ALL,
+                Fore.CYAN + "Тип" + Style.RESET_ALL,
+                Fore.CYAN + "Время" + Style.RESET_ALL,
+                Fore.CYAN + "Преподаватели" + Style.RESET_ALL,
+                Fore.CYAN + "Аудитория" + Style.RESET_ALL
+            ]
+            print(f"\n{Fore.GREEN}Расписание:{Style.RESET_ALL}")
+            print(tabulate(table_data, headers=headers, tablefmt="fancy_grid"))
+        else:
+            print(f"{Fore.YELLOW}Нет данных, соответствующих фильтрам.{Style.RESET_ALL}")
+    
     loader.close()
 
 if __name__ == "__main__":

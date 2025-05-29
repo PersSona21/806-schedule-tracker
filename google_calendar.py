@@ -7,7 +7,7 @@ from database import Session, Schedule
 # Конфигурация
 SCOPES = ["https://www.googleapis.com/auth/calendar"]
 SERVICE_ACCOUNT_FILE = "credentials.json"  # Путь к JSON-ключу
-CALENDAR_ID = "your_calendar_id@group.calendar.google.com"  # ID календаря
+CALENDAR_ID = "ddd06c1c181506d4be60b744ee077ac3c01f0dd12f1d5b26a15fb19ad4ae813f@group.calendar.google.com"  # ID календаря
 
 # Загрузка учетных данных
 credentials = service_account.Credentials.from_service_account_file(
