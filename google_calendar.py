@@ -122,4 +122,4 @@ def delete_event(event_id: str):
         service.events().delete(calendarId=CALENDAR_ID, eventId=event_id).execute()
         print(f"Событие {event_id} удалено.")
     except Exception as e:
-        print(f"Ошибка удаления события: {e}")
+        print(f"Ошибка: {e}")
